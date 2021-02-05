@@ -1,0 +1,6 @@
+README.md
+setup.cfg
+analysis_tools_jadmo.egg-info/PKG-INFO
+analysis_tools_jadmo.egg-info/SOURCES.txt
+analysis_tools_jadmo.egg-info/dependency_links.txt
+analysis_tools_jadmo.egg-info/top_level.txt

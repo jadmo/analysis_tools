@@ -2,7 +2,7 @@ import numpy as np
 from qutip import *
 import time
 
-def transform_to_4_4(data):
+def to_4_4(data):
     # This function assumes that the first dimension of the input data is 16 or 4*4.
     # The outputs of the data becomes 4*4 in the first two axes
 
@@ -17,7 +17,7 @@ def transform_to_4_4(data):
 
     return reshaped_data
 
-def transform_to_n_1(data, indices):
+def to_n_1(data, indices):
 
     return np.array([data[i] for i in indices])
 

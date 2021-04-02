@@ -4,15 +4,15 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
-from ..analysis.operation import *
-from ..data import transformation
+from .operation import *
+from .data import *
 
 sys.path.append('/content/drive/My Drive/Research/qutip_sim/site-packages')
 sys.path.append('/content/drive/My Drive/Research/qutip_sim/site-packages/qutip')
 sys.path.append('/content/drive/My Drive/Research/qutip_sim/custom_files/VQE_files')
 from qutip import *
-# from H2Functions import read_in_data
-# from google.colab import files
+from H2Functions import read_in_data
+from google.colab import files
 
 def plot_4_4(data_x, data_y, fit_y, label, x_label=None, y_label=None, save=False):
     """
@@ -25,10 +25,8 @@ def plot_4_4(data_x, data_y, fit_y, label, x_label=None, y_label=None, save=Fals
     label: titles for each subplots
     """
 
-    data_y = transformation.to_4_4(data_y)
-    # data_y = np.stack([data_y], -1)
-    # data_y = add_dim(data_y, 4)
-    print('shape of data_y', np.shape(data_y))
+    data_y = transform_to_4_4(data_y)
+    data_y = add_dim(data_y, 4)
 
     fig, axes = plt.subplots(nrows=4, ncols=4, sharex = True, sharey = True, figsize=(12.8, 9.6))
 
@@ -146,8 +144,7 @@ def plot_sphere(data_x, data_y, fit_y, label, save=False):
     b = Bloch()
     b.point_color = ['#1f77b4', '#1f77b4', '#ff7f0e', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
     b.sphere_color = 'w'
-    b.sphere_alpha = 0.5
-    print('shape of bloch', np.shape(data_y))
+    b.sphere_alpha = 0
     for k in range(np.shape(data_y)[-1]):
         pnts = []
         lines = []
@@ -161,7 +158,7 @@ def plot_sphere(data_x, data_y, fit_y, label, save=False):
             if fit_y is not None:
                 func = fit_y[i][k]['func']
                 fits.append(func(data_x, *fit_y[i][k]['popt']))
-        print(pnts)
+
         b.add_points(pnts)# , meth='l')
         b.add_points(lines , meth='l')
         if fit_y is not None:

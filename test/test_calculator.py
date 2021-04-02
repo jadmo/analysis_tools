@@ -1,5 +1,5 @@
 import unittest
-from app.calculator import Calculator
+from analysis_tools.calculator import Calculator
 
 class TddInPythonExample(unittest.TestCase):
 
@@ -18,9 +18,6 @@ class TddInPythonExample(unittest.TestCase):
 
     def test_calculator_retunrs_error_message_if_y_arg_not_number(self):
         self.assertRaises(ValueError, self.calc.add, 2, 'three')
-
-
-
 
 
 

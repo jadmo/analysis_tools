@@ -10,6 +10,7 @@ from scipy import optimize
 from scipy.optimize import minimize, least_squares, curve_fit
 from scipy.signal import get_window
 from scipy.stats import norm
+from . import func
 
 
 def error_bar(popt, pcov):
@@ -17,24 +18,6 @@ def error_bar(popt, pcov):
     lb = popt - np.sqrt(np.diag(pcov))
 
     return ub, lb
-
-def lin_func(x, a, b):
-    return a * x + b
-
-def exp_func(x, a, b, c):
-    return a * np.exp(-b * x) + c
-
-def exp_sin_func(x, amp, decay, omega, phi, offset):
-    return amp*np.exp(-x/decay)*np.sin(2.*np.pi*omega*x+phi)+offset
-
-def lsq_fit(func, x, y):
-    try:
-        popt, pcov = curve_fit(func, x, y, maxfev=40000)
-
-    except:
-        popt, pcov = None, None
-
-    return {'func':func, 'popt':popt, 'pcov':pcov}
 
 def Fit_3D_Rabi(data, dt, freq_est=None, use_freq_bound=True):
 
@@ -173,14 +156,14 @@ def Fit_1D_Freq_exp(z, dt, use_freq_bound=True):
 
     t = np.linspace(0.,dt*(len(z)-1), len(z))
 
-    omega = fmax
+    freq = fmax
 
     df = f[1]-f[0]
     min_omega = fmax - df
     max_omega = fmax + df
 
-    cosz = z*np.cos(2.0*np.pi*omega*t)
-    sinz = z*np.sin(2.0*np.pi*omega*t)
+    cosz = z*np.cos(2.0*np.pi*freq*t)
+    sinz = z*np.sin(2.0*np.pi*freq*t)
     phi = np.arctan2(np.mean(cosz),np.mean(sinz))
     offset = np.mean(z)
     amp = 2**0.5*np.mean((z-offset)**2)**0.5
@@ -201,15 +184,15 @@ def Fit_1D_Freq_exp(z, dt, use_freq_bound=True):
         args['bounds'] = ((min_omega,max_omega),(-1.2,1.2),(None,None),(-1.2,1.2),(0,None))
 
     if True:
-        result=minimize(lsq_exp_sin, np.array([omega,amp,phi,offset,decay]),args=(t,z),**args)
+        result=minimize(lsq_exp_sin, np.array([freq,amp,phi,offset,decay]),args=(t,z),**args)
     else:
         result=minimize(lsq_exp, np.array([amp,offset,decay]),args=(t,z))
 
-    omega,amp,phi,offset,decay=result.x
+    freq,amp,phi,offset,decay=result.x
 
-    popt = amp, decay, omega, phi, offset
+    popt = amp, decay, freq, phi, offset
 
-    return {'Frequency':omega,'Amplitude':amp,'Phase':phi, 'Offset':offset, 'Decay':decay, 'func':exp_sin_func, 'popt':popt}
+    return {'Frequency':freq,'Amplitude':amp,'Phase':phi, 'Offset':offset, 'Decay':decay, 'func':func.exp_sin, 'popt':popt}
 
 def Fit_1D_Freq_Gaussian_Estimation(z, dt, gaussian_window_std = 0.2):
 
@@ -250,8 +233,8 @@ def Fit_1D_Freq_Gaussian_Estimation(z, dt, gaussian_window_std = 0.2):
 
         return(estimated_frequency)
 
-    omega = gaussian_estimation(signal_max, signal_left_lobe, signal_right_lobe, imax, df, 0)
+    freq = gaussian_estimation(signal_max, signal_left_lobe, signal_right_lobe, imax, df, 0)
 
-    popt = amp, decay, omega, phi, offset
+    popt = amp, decay, freq, phi, offset
 
-    return {'Frequency':omega,'Amplitude':amp,'Phase':phi, 'Offset':offset, 'Decay':decay, 'func':exp_sin_func, 'popt':popt}
+    return {'Frequency':freq,'Amplitude':amp,'Phase':phi, 'Offset':offset, 'Decay':decay, 'func':func.exp_sin, 'popt':popt}

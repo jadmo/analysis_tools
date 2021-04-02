@@ -220,8 +220,7 @@ def Fit_1D_Freq_Gaussian_Estimation(z, dt, gaussian_window_std = 0.2):
 
     #  fourier transform with gaussian window applied to data
     gaussian_std = round(gaussian_window_std*len(z))
-
-    windowed_signal = np.abs(np.fft.rfft(z.real*get_window(('gaussian', gaussian_std), len(z))))
+    windowed_signal = np.abs(np.fft.rfft(z*get_window(('gaussian', gaussian_std), len(z))))
     f = np.fft.rfftfreq(len(z),dt)
 
     df = f[1]-f[0]

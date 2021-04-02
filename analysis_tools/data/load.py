@@ -21,11 +21,14 @@ def file_num_oqclab(x):
 
     return num.format(x=x)
 
-def load_oqclab(directory, file_name, file_list):
+def oqclab_files(date, experiment, file_num):
 
     batch = []
-    for i in file_list:
-        file = directory + '/000' + file_num_oqclab(i) + file_name
-        batch.append(np.load(file))
+    for i in file_num:
+        file = 'Data/oqclab-0.4_logs/' + date + file_num_oqclab(i) + '-' + experiment
+        batch.append(np.load(file, allow_pickle=True))
+
+    if len(batch)==1:
+        batch = batch[0]
 
     return batch

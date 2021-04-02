@@ -34,7 +34,7 @@ def load_oqclab(directory, file_name, file_list):
 
     return batch
 
-def to_4_4(data):
+def transform_to_4_4(data):
     # This function assumes that the first dimension of the input data is 16 or 4*4.
     # The outputs of the data becomes 4*4 in the first two axes
 
@@ -49,9 +49,11 @@ def to_4_4(data):
 
     return reshaped_data
 
-def to_n_1(data, indices):
+def transform_to_3_1(data, indices):
 
-    return np.array([data[n] for n in indices])
+    reshaped_data = np.array([data[indices[0]], data[indices[1]], data[indices[2]]])
+
+    return reshaped_data
 
 def add_dim(data, target_dim):
 

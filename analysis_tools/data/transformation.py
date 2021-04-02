@@ -21,6 +21,15 @@ def to_n_1(data, indices):
 
     return np.array([data[i] for i in indices])
 
+def swap_axes(data):
+    # Swap last two axes in the data
+    # For example, assume 4*4*d1*d2 as an input, it outputs 4*4*d2*d1
+
+    s = np.shape(data)
+    swapped_data = np.swapaxes(data, s[-2], s[-1])
+
+    return swapped_data
+
 
 """
 These files can be replaced by np.stack([data], -1) and np.stack([data1, data2], -1)

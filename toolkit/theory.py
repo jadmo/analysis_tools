@@ -65,7 +65,6 @@ def dressed_to_bare(freq_d, anharm, zeta):
         freq_b.append(freq_d[i] - (-1)**i * J**2 / detuning_b - zeta / 2)
 
     return freq_b, J
-
 def bloch_vector(result):
     sum = 0
     for i in range(4):
